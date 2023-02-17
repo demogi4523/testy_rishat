@@ -1,1 +1,13 @@
-agasg
+<ul>
+{% for item in items %}
+    <a href="{% url 'item' 1 %}">
+        <li>
+            <div>Name: {{ item.name }}</div>
+            <div>Description: {{ item.description }}</div>
+            <div>Price: {{ item.price }}</div>
+        </li>
+    </a>
+{% empty %}
+No items yet!
+{% endfor %}
+</ul>

@@ -2,8 +2,7 @@ from django.urls import path
 
 from products.views import (
     ItemListView, 
-    ItemView, 
-    buy_item, 
+    ItemView,
     get_pk, 
     create_checkout_session,
     success,
@@ -23,8 +22,7 @@ from products.views import (
 #   происходить редирект на Checkout форму stripe.redirectToCheckout(sessionId=session_id)
 urlpatterns = [
     path('', ItemListView.as_view(), name='items'),
-    path('items/<int:pk>', ItemView.as_view(), name='item'),
-    path('buy/<int:pk>', buy_item, name='item-buy'),
+    path('item/<int:pk>', ItemView.as_view(), name='item'),
     path('get_pk', get_pk, name='get-public-key'),
     path('create_checkout_session/<int:pk>', create_checkout_session, name='ccs'),
     path('success', success, name='item-buy-success'),

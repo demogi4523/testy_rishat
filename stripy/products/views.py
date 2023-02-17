@@ -14,6 +14,7 @@ from products.models import Item
 
 class ItemListView(ListView):
     model = Item
+    context_object_name = "items"
 
 
 # TODO:
@@ -29,12 +30,6 @@ class ItemListView(ListView):
 class ItemView(DetailView):
     model = Item
 
-@http.require_GET
-def buy_item(request, pk):
-    data = Item.objects.get(pk=pk)
-    print(data)
-    data = data.serialize()
-    return render(request=request, template_name='products/checkout.html', context=data)
 
 load_dotenv(find_dotenv())
 stripe.api_key = os.environ['STRIPE_API_SECRET_KEY']
@@ -45,7 +40,7 @@ def get_pk(request):
         "pk": pk_key,
     })
 
-@http.require_POST
+@http.require_GET
 def create_checkout_session(request, pk):
     # data = json.loads(request.body)
     # pk = data.pk

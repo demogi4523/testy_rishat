@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Buy cool new product</title>
+    <title>Cool stuff | {{ item.name }}</title>
     <script src="https://js.stripe.com/v3/"></script>
   </head>
   <body>
@@ -10,16 +10,26 @@
           .then((response) => response.json())
           .then((data) => {
             stripe = Stripe(data.pk);
-            console.log("Success");
+            console.log("Success getting Stripe Public Key");
           })
           .catch((err) => {
           console.error(err);
-          console.error("agagolhajsgos");
+          console.error("Stripe Public Key getting error");
           });
     </script>
-    <form action="/create_checkout_session/{{pk}}" method="POST">
+
+    <div>
+        <div>Name: {{ item.name }}</div>
+        <div>Description: {{ item.description }}</div>
+        <div>Price: {{ item.price }}</div>
+    <div>
+    
+    <form action="/create_checkout_session/{{item.pk}}" method="GET">
       {% csrf_token %}
       <button type="submit">Checkout</button>
     </form>
   </body>
 </html>
+
+
+

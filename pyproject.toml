@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "testy_rishat"
+version = "0.1.0"
+description = ""
+authors = ["demogi4523 <demogi4523@yandex.ru>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.7.5"
+Django = "3.2"
+charset-normalizer = "^3.0.0"
+stripe = "^5.2.0"
+python-dotenv = "^0.21.1"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,25 @@
+<html>
+  <head>
+    <title>Buy cool new product</title>
+    <script src="https://js.stripe.com/v3/"></script>
+  </head>
+  <body>
+    <script>
+        var stripe;
+        fetch('/get_pk')
+          .then((response) => response.json())
+          .then((data) => {
+            stripe = Stripe(data.pk);
+            console.log("Success");
+          })
+          .catch((err) => {
+          console.error(err);
+          console.error("agagolhajsgos");
+          });
+    </script>
+    <form action="/create_checkout_session/{{pk}}" method="POST">
+      {% csrf_token %}
+      <button type="submit">Checkout</button>
+    </form>
+  </body>
+</html>

@@ -130,3 +130,6 @@ dmypy.json
 
 # DB migrations
 migrations/
+
+# vs code workspace
+*.code-workspace

@@ -34,17 +34,14 @@ class ItemView(DetailView):
 load_dotenv(find_dotenv())
 stripe.api_key = os.environ['STRIPE_API_SECRET_KEY']
 
-def get_pk(request):
+def get_pk(_):
     pk_key = os.environ['STRIPE_API_PUBLIC_KEY']
     return JsonResponse({
         "pk": pk_key,
     })
 
 @http.require_GET
-def create_checkout_session(request, pk):
-    # data = json.loads(request.body)
-    # pk = data.pk
-    # amount = data.amount
+def create_checkout_session(_, pk):
     product = Item.objects.get(pk=pk)
 
     # FIXME: fix this hardcoded domain
@@ -57,7 +54,6 @@ def create_checkout_session(request, pk):
         },
         'quantity': 1,
     }]
-    print(data)
     
     session = stripe.checkout.Session.create(
         line_items=data,
@@ -66,7 +62,12 @@ def create_checkout_session(request, pk):
         cancel_url=f'{domain}/cancel',
     )
 
-    return redirect(session.url, code=303)
+    print('Stripe session object')
+    print(session)
+
+    return JsonResponse({
+        'StripeCheckoutSessionId': session.stripe_id,
+    })
 
 
 def success(request):

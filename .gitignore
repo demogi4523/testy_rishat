@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# DB migrations
+migrations/
+
+# vs code workspace
+*.code-workspace

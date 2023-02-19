@@ -1,0 +1,64 @@
+<html>
+  <head>
+    <title>Cool stuff | {{ item.name }}</title>
+    <script src="https://js.stripe.com/v3/"></script>
+  </head>
+  <body>
+    <script>
+      window.onload = function() {
+          console.log('qqq' + "{{item.pk}}")
+          var stripe;
+          fetch('/get_pk')
+            .then((response) => response.json())
+            .then((data) => {
+              stripe = Stripe(data.pk);
+              console.log("Success getting Stripe Public Key");
+            })
+            .catch((err) => {
+            console.error(err);
+            console.error("Stripe Public Key getting error");
+          });
+
+
+        var buyForm = document.querySelector('#buyForm');
+        console.log(buyForm);
+        buyForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          var item_url = "/item/{{item.pk}}";
+          console.log("item url: " + item_url);
+          fetch(item_url)
+            .then((response) => response.json())
+            .then((data) => {
+              var stripeCheckoutSessionId = data.StripeCheckoutSessionId;
+              console.log(stripeCheckoutSessionId);
+              console.log("Stripe Checkout Session Id getting success");
+              console.log(stripe);
+              stripe.redirectToCheckout({
+                sessionId: stripeCheckoutSessionId,
+              });
+            })
+            .catch((err) => {
+              console.error(err);
+              console.error("Stripe Checkout Session Id getting error");
+            });
+          });
+
+        };
+    </script>
+
+    <div>
+        <div>Name: {{ item.name }}</div>
+        <div>Description: {{ item.description }}</div>
+        <div>Price: {{ item.price }}</div>
+    <div>
+    
+    <form method="GET" id="buyForm">
+      {% csrf_token %}
+      <button id="buyBtn">Buy</button>
+    </form>
+  </body>
+</html>
+
+
+

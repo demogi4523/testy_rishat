@@ -1,6 +1,6 @@
 <ul>
 {% for item in items %}
-    <a href="{% url 'item' 1 %}">
+    <a href="{% url 'item' item.pk %}">
         <li>
             <div>Name: {{ item.name }}</div>
             <div>Description: {{ item.description }}</div>

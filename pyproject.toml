@@ -11,6 +11,10 @@ Django = "3.2"
 charset-normalizer = "^3.0.0"
 stripe = "^5.2.0"
 python-dotenv = "^0.21.1"
+gunicorn = "^20.1.0"
+dj-database-url = "^1.2.0"
+psycopg2-binary = "^2.9.5"
+whitenoise = {extras = ["brotli"], version = "^6.3.0"}
 
 [tool.poetry.dev-dependencies]
 

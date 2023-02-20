@@ -11,6 +11,6 @@ python manage.py migrate
 python manage.py createsuperuser --noinput
 
 python manage.py makemigrations products
-python manage.py migrate tg_news
+python manage.py migrate products
 
 python manage.py initial_database_fill

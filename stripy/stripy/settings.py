@@ -38,7 +38,7 @@ if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append('127.0.0.1')
 
 if DEBUG:
-    DEBUG = bool(os.environ.get('DEBUG', True))
+    DEBUG = bool(int(os.environ.get('DEBUG', 1)))
 
 if not DEBUG:
     ALLOWED_HOSTS.append('127.0.0.1')
@@ -154,14 +154,14 @@ if not DEBUG:
 
     DATABASES = {
         'default': dj_database_url.config(
-            default='postgresql://db_user:db_passwd@localhost:5432/testy_rishat_db',
+            default='postgresql://postgres:postgres@db:5432/postgres',
             conn_max_age=600,
         ),
     }
 
     # Tell Django to copy statics to the `staticfiles` directory
     # in your application directory on Render.
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
     # Turn on WhiteNoise storage backend that takes care of compressing static files
     # and creating unique names for each version so they can safely be cached forever.
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

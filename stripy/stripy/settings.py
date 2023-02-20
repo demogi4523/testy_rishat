@@ -37,6 +37,15 @@ if RENDER_EXTERNAL_HOSTNAME:
     # FIXME: maybe it corresponding wih SQLite db
     ALLOWED_HOSTS.append('127.0.0.1')
 
+if DEBUG:
+    DEBUG = bool(os.environ.get('DEBUG', True))
+
+if not DEBUG:
+    ALLOWED_HOSTS.append('127.0.0.1')
+    ALLOWED_HOSTS.append('0.0.0.0')
+    ALLOWED_HOSTS.append('localhost')
+    
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -51,6 +60,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -58,6 +68,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+    
 
 ROOT_URLCONF = 'stripy.urls'
 
@@ -135,4 +146,22 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #My settings
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+
+if not DEBUG:
+    import dj_database_url
+
+    DATABASES = {
+        'default': dj_database_url.config(
+            default='postgresql://db_user:db_passwd@localhost:5432/testy_rishat_db',
+            conn_max_age=600,
+        ),
+    }
+
+    # Tell Django to copy statics to the `staticfiles` directory
+    # in your application directory on Render.
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    # Turn on WhiteNoise storage backend that takes care of compressing static files
+    # and creating unique names for each version so they can safely be cached forever.
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

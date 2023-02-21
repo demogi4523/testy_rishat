@@ -84,6 +84,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                "custom_auth.context_processors.get_avatar_url",
+                "custom_auth.context_processors.get_avatar_username",
             ],
         },
     },
@@ -149,6 +151,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #My settings
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
+MEDIA_URL = "/media/"
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+DEFAULT_AVATAR_IMAGE = os.path.join(MEDIA_ROOT, 'avas', 'anonym.png')
+DEFAULT_AVATAR_URL = os.path.join(MEDIA_URL, 'avas', 'anonym.png')
 
 if not DEBUG:
     import dj_database_url

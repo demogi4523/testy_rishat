@@ -49,6 +49,7 @@ if not DEBUG:
 # Application definition
 
 INSTALLED_APPS = [
+    'custom_auth.apps.AuthConfig',
     'products.apps.ProductsConfig',
     'django.contrib.admin',
     'django.contrib.auth',

@@ -1,11 +1,11 @@
 import os
 
+from django.http import HttpRequest, HttpResponseBadRequest
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.http.response import JsonResponse
 from django.views.decorators import http
-from django.shortcuts import redirect, render
-from django.conf import settings
+from django.shortcuts import render
 import stripe
 from dotenv import load_dotenv, find_dotenv
 
@@ -17,16 +17,6 @@ class ItemListView(ListView):
     context_object_name = "items"
 
 
-# TODO:
-# -	GET /buy/{id}, c помощью которого можно получить Stripe Session Id для оплаты выбранного Item. 
-#   При выполнении этого метода c бэкенда с помощью python библиотеки stripe должен выполняться запрос 
-#   stripe.checkout.Session.create(...) и полученный session.id выдаваться в результате запроса
-# 
-# -	GET /item/{id}, c помощью которого можно получить простейшую HTML страницу, 
-#   на которой будет информация о выбранном Item и кнопка Buy. 
-#   По нажатию на кнопку Buy должен происходить запрос на /buy/{id}, 
-#   получение session_id и далее  с помощью JS библиотеки Stripe 
-#   происходить редирект на Checkout форму stripe.redirectToCheckout(sessionId=session_id)
 class ItemView(DetailView):
     model = Item
 
@@ -41,34 +31,37 @@ def get_pk(_):
     })
 
 @http.require_GET
-def create_checkout_session(_, pk):
-    product = Item.objects.get(pk=pk)
+def create_checkout_session(request: HttpRequest, pk):
+    try:
+        product = Item.objects.get(pk=pk)
 
-    # FIXME: fix this hardcoded domain
-    domain = 'http://localhost:8000'
-    data = [{
-        'price_data': {
-            'currency': 'rub',
-            'product_data': product.get_data(),
-            'unit_amount': product.price, # TODO: wtf, what's the differebce between "unit_amount" and "quantity"
-        },
-        'quantity': 1,
-    }]
-    
-    session = stripe.checkout.Session.create(
-        line_items=data,
-        mode='payment',
-        success_url=f'{domain}/success',
-        cancel_url=f'{domain}/cancel',
-    )
+        amount = int(request.GET['amount'])
+        
+        domain = request.scheme + '://' + request.get_host()
+        data = [{
+            'price_data': {
+                'currency': 'rub',
+                'product_data': product.get_data(),
+                'unit_amount': product.price, # TODO: wtf, what's the differebce between "unit_amount" and "quantity"
+            },
+            'quantity': amount,
+        }]
+        
+        session = stripe.checkout.Session.create(
+            line_items=data,
+            mode='payment',
+            success_url=f'{domain}/success',
+            cancel_url=f'{domain}/cancel',
+        )
 
-    print('Stripe session object')
-    print(session)
+        print('Stripe session object')
+        print(session)
 
-    return JsonResponse({
-        'StripeCheckoutSessionId': session.stripe_id,
-    })
-
+        return JsonResponse({
+            'StripeCheckoutSessionId': session.stripe_id,
+        })
+    except (TypeError, KeyError) as err:
+        return HttpResponseBadRequest(content=err)
 
 def success(request):
     return render(request=request, template_name='products/success.html')

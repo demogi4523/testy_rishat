@@ -1,13 +1,16 @@
-from django.db import models
 from django.contrib import admin
-from django import forms
-from django.contrib.admin import widgets
 
 from products.models import (
     Item, 
     Cart, CartItem, 
     Order, OrderItem,
+    Discount,
+    Tax,
 )
+
+
+admin.site.register(Discount)
+admin.site.register(Tax)
 
 @admin.register(OrderItem)
 class OrderAdmin(admin.ModelAdmin):
@@ -16,14 +19,7 @@ class OrderAdmin(admin.ModelAdmin):
         'item',
         'quantity',
     )
-    # fieldsets = (
-    #   ('Standard info', {
-    #       'fields': ('user',)
-    #   }),
-    # )
-    # readonly_fields = ('get_items', )
-    pass
-    
+
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
@@ -33,7 +29,7 @@ class OrderAdmin(admin.ModelAdmin):
     )
     fieldsets = (
       ('Order info', {
-          'fields': ('user', 'get_items')
+          'fields': ('user', 'payed', 'get_items')
       }),
     )
     readonly_fields = ('get_items', )
@@ -50,10 +46,11 @@ class OrderAdmin(admin.ModelAdmin):
 @admin.register(Item)
 class AdminItem(admin.ModelAdmin):
     list_display = (
-        'name', 
+        'name',
+        'discount',
+        'tax', 
         'remained',
     )
-
 
 
 admin.site.register(CartItem)

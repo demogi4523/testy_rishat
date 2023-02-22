@@ -10,7 +10,9 @@ from products.views import (
     create_checkout_session,
     success,
     cancel,
-    clean,
+    OrderListView,
+    order,
+    create_cart_checkout_session
 )
 from custom_auth.views import (
     register,
@@ -34,7 +36,8 @@ urlpatterns = [
     path('success', success, name='item-buy-success'),
     path('cancel', cancel, name='item-buy-cancel'),
     path('cart', login_required(CartView.as_view()), name='cart'),
-    # path('clean', clean, name='cart-clean'),
+    path('orders', login_required(OrderListView.as_view()), name='orders'),
+    path('orders/<int:pk>', create_cart_checkout_session, name='order'),
     path('make_order', make_order, name='make-order'),
 ]
 

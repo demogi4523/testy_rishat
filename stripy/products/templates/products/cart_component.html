@@ -1,18 +1,25 @@
+{% block loading %}
+    {% load static %}
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="{% static 'js/buy_checkout.js' %}"></script>
+{% endblock loading %}
+
+
+
 <h2>Items list<h2>
 
     {% if messages %}
         {% for message in messages %}
-            {% comment %} {% with message=messages.0 %} {% endcomment %}
-            <div 
-                class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" 
-                role="alert">
-                {% autoescape off %}
-                    {{ message }}
-                {% endautoescape %}
-                {% comment %} {{ message|safe }} {% endcomment %}
-            </div>
+            {% if message.tags == 'warning' %}
+                <div 
+                    class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" 
+                    role="alert">
+                    {% autoescape off %}
+                        {{ message }}
+                    {% endautoescape %}
+                </div>
+            {% endif %}
         {% endfor %}
-        {% comment %} {% endwith %} {% endcomment %}
     {% endif %}
 
 <ul>
@@ -32,3 +39,9 @@
 <form action='make_order' method="get">
     <button type="submit">Order</button>
 </form>
+
+{% comment %} <form method="GET" id="buyForm">
+    {% csrf_token %}
+    <input id="amount" type="number" value=1>
+    <button id="buyBtn">Buy</button>
+</form> {% endcomment %}

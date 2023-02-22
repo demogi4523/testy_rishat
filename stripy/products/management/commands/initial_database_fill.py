@@ -11,6 +11,7 @@ items_fixture = [
         "price": "200000",
         "remained": 25,
         "active": True,
+        "tax": 13,
     },
     {
         "name": "Sweater",
@@ -18,7 +19,8 @@ items_fixture = [
         "price": "250000",
         "remained": 8,
         "active": True,
-
+        "tax": 13,
+        "discount": 20,
     },
     {
         "name": "Sneakers Nike",
@@ -26,7 +28,7 @@ items_fixture = [
         "price": "400000",
         "remained": 12,
         "active": True,
-
+        "tax": 16,
     },
     {
         "name": "T-Short",
@@ -34,7 +36,8 @@ items_fixture = [
         "price": "150000",
         "remained": 254,
         "active": True,
-
+        "tax": 20,
+        "discount": 20,
     },
     {
         "name": "Wristband",
@@ -42,7 +45,8 @@ items_fixture = [
         "price": "5000000",
         "remained": 3,
         "active": True,
-
+        "tax": 13,
+        "discount": 5,
     },
 ]
 

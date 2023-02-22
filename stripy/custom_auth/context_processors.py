@@ -4,6 +4,12 @@ from stripy.settings import DEFAULT_AVATAR_URL
 from custom_auth.models import Avatar
 
 
+def is_anonym(req: HttpRequest):
+    if req.user.is_authenticated:
+        return {'is_anonym': False}
+    return {'is_anonym': True}
+
+
 def get_avatar_url(req: HttpRequest):
     user = req.user
     url = DEFAULT_AVATAR_URL

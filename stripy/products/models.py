@@ -2,15 +2,31 @@ from __future__ import annotations
 from typing import Iterable, List
 
 from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import User
 
 
 class Item(models.Model):
     name = models.CharField(max_length=128)
     description = models.TextField(null=True)
-    price = models.IntegerField(null=False, default=1_000_000)
+    price = models.IntegerField(null=False, default=100_000_000)
     remained = models.PositiveSmallIntegerField(default=1)
     active = models.BooleanField(default=True)
+
+    tax = models.OneToOneField(
+        'Tax', 
+        on_delete=models.CASCADE, 
+        related_name='item_tax', 
+        blank=True,
+        null=True, 
+    )
+    discount = models.OneToOneField(
+        'Discount', 
+        on_delete=models.CASCADE, 
+        related_name='item_discount', 
+        blank=True,
+        null=True, 
+    )
 
     def serialize(self):
         return {
@@ -22,7 +38,6 @@ class Item(models.Model):
             "active": self.active,
         }
     
-    # TODO: make it!!!
     def reserve(self, amount):
         try:
             self.remained -= amount
@@ -67,7 +82,10 @@ class Cart(models.Model):
         total = 0
         items = self.get_items()
         for item in items:
-            total += item.item.price * item.quantity
+            val = item.item.price
+            if item.item.discount:
+                val *= (1 - item.item.discount / 100)
+            total += val
         return total
     
     def clear(self):
@@ -137,13 +155,12 @@ class Order(models.Model):
                 item=item.item,
                 quantity=item.quantity,
             )
-            # new_order_item.save()
             items.append(new_order_item)
         OrderItem.objects.bulk_create(items)
 
         new_order.user=cart.user
         new_order.payed=payed
-        # TODO: test it!!!
+
         new_order.save()
         return new_order
 
@@ -169,9 +186,53 @@ class Order(models.Model):
         self.save()
 
 
+    def summarize(self):
+        total = 0
+        items = self.get_items()
+
+        for item in items:
+            val = item.item.price
+            if item.item.discount:
+                val *= (1 - item.item.discount / 100)
+            total += val
+        return total
+
 class Discount(models.Model):
-    pass
+    item = models.OneToOneField(
+        Item, 
+        on_delete=models.CASCADE, 
+        related_name='dicount_item',
+        null=True,
+    )
+    percent = models.IntegerField(
+        default=1,
+        validators=[
+            MaxValueValidator(99),
+            MinValueValidator(1),
+        ]
+    )
+
+    def __str__(self) -> str:
+        return f"{self.item}'s with {self.percent} discount and {self.item.pk} id"
 
 
 class Tax(models.Model):
-    pass
+    item = models.OneToOneField(
+        Item, 
+        on_delete=models.CASCADE,
+        related_name='tax_item',
+        null=True,
+    )
+    percent = models.IntegerField(
+        default=10,
+        validators=[
+            MaxValueValidator(99),
+            MinValueValidator(1),
+        ]
+    )
+
+    class Meta:
+        verbose_name_plural = 'Taxes'
+
+    def __str__(self) -> str:
+        return f"{self.item}'s with id {self.item.pk} tax"

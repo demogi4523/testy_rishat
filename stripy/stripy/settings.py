@@ -86,6 +86,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 "custom_auth.context_processors.get_avatar_url",
                 "custom_auth.context_processors.get_avatar_username",
+                "custom_auth.context_processors.is_anonym",
             ],
         },
     },

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ avatar_username }}'s orders
+{% endblock title %}
+
+{% block loading %}
+    {% load static %}
+      <script src="https://js.stripe.com/v3/"></script>
+      <script src="{% static 'js/buy_checkout.js' %}"></script>
+{% endblock loading %}
+
+{% block content %}
+    <ul>
+    {% for order in orders %}
+        {% comment %} <a href="{% url 'order' order.pk %}"> {% endcomment %}
+            <li>
+                <ul>
+                {% for item in order.get_items %}
+                    <li>Name: <a href="{% url 'item' item.item.pk %}">{{ item.item.name }}</a></li>
+                    <li>Description: {{ item.item.description }}</li>
+                    <li>Price: {{ item.item.price }}</li>
+                    <li>Quantity: {{ item.quantity }}</li>
+                {% endfor %}
+                </ul>
+                {% if order.payed %}
+                    <hr>
+                    <p>Order payed!!!</p>
+                    <p>Summary: {{ order.summarize }}</p>
+                {% else %}
+                    <hr>
+                    <p>Order not payed!!!</p>
+                    <form id="buyForm{{order.pk}}" class="buyForm">
+                        {% csrf_token %}
+                        <button type="submit">Buy</button>
+                    </form>
+                {% endif %}
+            </li>
+    {% empty %}
+    No orders yet!
+    {% endfor %}
+    </ul>
+{% endblock content %}

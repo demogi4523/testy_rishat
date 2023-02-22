@@ -3,13 +3,14 @@ import os
 from django.http import HttpRequest, HttpResponseBadRequest
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
+from django.views.generic.base import TemplateView
 from django.http.response import JsonResponse
 from django.views.decorators import http
 from django.shortcuts import render
 import stripe
 from dotenv import load_dotenv, find_dotenv
 
-from products.models import Item
+from products.models import Item, Cart
 
 
 class ItemListView(ListView):
@@ -69,3 +70,13 @@ def success(request):
 
 def cancel(request):
     return render(request=request, template_name='products/cancel.html')
+
+
+class CartView(TemplateView):
+    template_name = "products/cart.html"
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(CartView, self).get_context_data(*args, **kwargs)
+        context['products'] = Cart.objects.all()
+
+        return context

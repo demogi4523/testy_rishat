@@ -158,6 +158,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 DEFAULT_AVATAR_IMAGE = os.path.join(MEDIA_ROOT, 'avas', 'anonym.png')
 DEFAULT_AVATAR_URL = os.path.join(MEDIA_URL, 'avas', 'anonym.png')
 
+LOGIN_URL = 'login'
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
+
 if not DEBUG:
     import dj_database_url
 

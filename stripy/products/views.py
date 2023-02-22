@@ -3,10 +3,10 @@ import os
 from django.http import HttpRequest, HttpResponseBadRequest
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
-from django.views.generic.base import TemplateView
 from django.http.response import JsonResponse
 from django.views.decorators import http
-from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
 import stripe
 from dotenv import load_dotenv, find_dotenv
 
@@ -64,19 +64,18 @@ def create_checkout_session(request: HttpRequest, pk):
     except (TypeError, KeyError) as err:
         return HttpResponseBadRequest(content=err)
 
-def success(request):
+def success(request: HttpRequest):
     return render(request=request, template_name='products/success.html')
 
 
-def cancel(request):
+def cancel(request: HttpRequest):
     return render(request=request, template_name='products/cancel.html')
 
 
-class CartView(TemplateView):
-    template_name = "products/cart.html"
+@login_required
+def clean(request: HttpRequest):
+    current_user = request.user
+    current_user_cart = Cart.objects.get(user=current_user)
+    current_user_cart.clear()
 
-    def get_context_data(self, *args, **kwargs):
-        context = super(CartView, self).get_context_data(*args, **kwargs)
-        context['products'] = Cart.objects.all()
-
-        return context
+    return redirect('root')

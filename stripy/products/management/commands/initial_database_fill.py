@@ -9,26 +9,40 @@ items_fixture = [
         "name": "T-Short",
         "description": "Beautiful T-Short for any life situation",
         "price": "200000",
+        "remained": 25,
+        "active": True,
     },
     {
         "name": "Sweater",
         "description": "A warm sweater especially for the Siberian winter",
         "price": "250000",
+        "remained": 8,
+        "active": True,
+
     },
     {
         "name": "Sneakers Nike",
         "description": "Incomparable original nikes",
         "price": "400000",
+        "remained": 12,
+        "active": True,
+
     },
     {
         "name": "T-Short",
         "description": "Usual T-Short",
         "price": "150000",
+        "remained": 254,
+        "active": True,
+
     },
     {
         "name": "Wristband",
         "description": "A fashion accessory for the evening",
         "price": "5000000",
+        "remained": 3,
+        "active": True,
+
     },
 ]
 

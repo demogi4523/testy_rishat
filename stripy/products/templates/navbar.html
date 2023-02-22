@@ -5,8 +5,8 @@
           <a type="button" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             <img src="{{ avatar_url }}" class="img-fluid dropdown-toggle rounded-circle" width="30" height="30" alt="{{ avatar_username }} avatar" id="avatar"></a>
           <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item disabled" href="{% url 'orders' %}">Orders</a></li>
-            <li><a class="dropdown-item disabled" href="{% url 'cart' %}">Cart</a></li>
+            <li><a class="dropdown-item disabled" href="{% url 'make-order' %}">Orders</a></li>
+            <li><a class="dropdown-item" href="{% url 'cart' %}">Cart</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="{% url 'login' %}">Login</a></li>
             <li><a class="dropdown-item" href="{% url 'account-settings' %}">Settings</a></li>

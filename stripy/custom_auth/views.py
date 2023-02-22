@@ -1,14 +1,24 @@
+from typing import List
+
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import  render, redirect
+from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout as lgt
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
-
+from django.views.generic.base import TemplateView
 from django.views.decorators.http import require_http_methods
+from django.shortcuts import  render, redirect
+from django.utils.html import escape
 
 from custom_auth.models import Avatar
 from custom_auth.forms import UserRegistrationForm, AccountPhotoUpdateForm
+from products.models import (
+    Cart, 
+    CartItem, 
+    Order,
+)
+
 
 def register(request: HttpRequest):
     if request.method == 'POST':
@@ -45,6 +55,7 @@ def login_request(request: HttpRequest):
 	return render(request=request, template_name="account/login.html", context={"login_form":form})
 
 
+@login_required
 @require_http_methods(["GET", "POST"])
 def account_settings(req: HttpRequest):
     # TODO: Crop avatar
@@ -76,9 +87,56 @@ def logout(req: HttpRequest):
     return redirect('root')
 
 
-def cart(req: HttpRequest):
-      pass
+class CartView(TemplateView):
+    template_name = "products/cart.html"
+
+    def get_context_data(self, *args, **kwargs):
+        current_user = self.request.user
+        current_user_cart = Cart.objects.get(user=current_user)
+
+        context = super(CartView, self).get_context_data(*args, **kwargs)
+        context['items'] = CartItem.objects.filter(cart=current_user_cart)
+
+        context['summary'] = current_user_cart.summarize()
+
+        return context
+    
+
+def make_order(req: HttpRequest):
+    #  check all items availability,
+    #  create order from cart,
+    #  preserve all items
+    #  clean cart
+    #  and send email
+    current_user = req.user
+    current_user_cart = Cart.get_cart_by_user(current_user)
+    bad_items = []
+ 
+    status = Order.check_items_availability(current_user_cart.get_items(), bad_items)
+    if status:
+        Order.reserve(current_user_cart)
+        Order.create_from_cart(current_user_cart)
+        current_user_cart.clear()
+        # send_email(order_info)
+        return redirect('root')
+    else:
+         return cancel_order(req, bad_items)
 
 
-def orders(req: HttpRequest):
-      pass
+def cancel_order(req: HttpRequest, bad_items: List):
+     msg = escape("""
+        <ul>
+            {}
+        </ul>
+     """.format("\n".join((
+          f"<li><div>{bad_item[0]}</div><div>{bad_item[1]}</div> <div>{bad_item[2]}</div></li>" for bad_item in bad_items
+        )))
+     )
+     messages.add_message(
+          request=req,
+          level=messages.WARNING,
+          message=msg,
+     )
+     return redirect('cart')
+
+    

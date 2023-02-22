@@ -1,4 +1,7 @@
-{% for product in products %}
-    {{product.id}}
-    {{product.title}} # Fields related to product
-{% endfor %}
+{% extends 'base.html' %}
+
+{% block content %}
+
+    {% include 'products/cart_component.html' %}
+
+{% endblock content %}

@@ -1,0 +1,34 @@
+<h2>Items list<h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            {% comment %} {% with message=messages.0 %} {% endcomment %}
+            <div 
+                class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" 
+                role="alert">
+                {% autoescape off %}
+                    {{ message }}
+                {% endautoescape %}
+                {% comment %} {{ message|safe }} {% endcomment %}
+            </div>
+        {% endfor %}
+        {% comment %} {% endwith %} {% endcomment %}
+    {% endif %}
+
+<ul>
+    {% for item in items %}
+        <li>
+            <p>Name: {{ item.item.name }}</p>
+            <p>Price: {{ item.item.price }}</p>
+            <p>Quantity: {{ item.quantity }}</p>
+            <p>Remained: {{ item.item.remained }}</p>
+        </li>
+    {% endfor %}
+<ul>
+
+<hr>
+<p>Summary: {{ summary }}</p>
+
+<form action='make_order' method="get">
+    <button type="submit">Order</button>
+</form>

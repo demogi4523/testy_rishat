@@ -1,6 +1,7 @@
 from django.urls import path 
 from django.conf.urls.static import static
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 
 from products.views import (
     ItemListView, 
@@ -9,14 +10,15 @@ from products.views import (
     create_checkout_session,
     success,
     cancel,
+    clean,
 )
 from custom_auth.views import (
     register,
     login_request as login,
     logout,
     account_settings,
-    cart,
-    orders,
+    CartView,
+    make_order,
 )
 
 
@@ -25,14 +27,15 @@ urlpatterns = [
     path('register/', register, name='register'),
     path('login/', login, name='login'),
     path("logout", logout, name="logout"),
-    path("account-settings", account_settings, name="account-settings"),
+    path("account_settings", account_settings, name="account-settings"),
     path('get_pk', get_pk, name='get-public-key'),
     path('item/<int:pk>', create_checkout_session, name='ccs'),
     path('items/<int:pk>', ItemView.as_view(), name='item'),
     path('success', success, name='item-buy-success'),
     path('cancel', cancel, name='item-buy-cancel'),
-    path('cart', cart, name='cart'),
-    path('orders', orders, name='orders'),
+    path('cart', login_required(CartView.as_view()), name='cart'),
+    # path('clean', clean, name='cart-clean'),
+    path('make_order', make_order, name='make-order'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

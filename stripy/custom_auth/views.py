@@ -106,7 +106,7 @@ class CartView(TemplateView):
         # print(discounts)
         # context['discounts'] = discounts
 
-        # context['summary'] = current_user_cart.summarize()
+        context['summary'] = current_user_cart.summarize()
         # print(context)
 
         return context

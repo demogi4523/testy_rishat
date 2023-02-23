@@ -57,6 +57,7 @@ class Command(BaseCommand):
         try:
             items = []
             tax, discount = None, None
+            taxes, discounts = [], []
             for item in items_fixture:
                 if "discount" in item:
                     discount = item["discount"]  #= Discount(item=new_item, percent=item["discount"])
@@ -68,14 +69,16 @@ class Command(BaseCommand):
                 new_item = Item(**item)
                 if discount:
                     db_discount = Discount(item=new_item, percent=discount)
-                    db_discount.save()
+                    discounts.append(db_discount)
                     new_item.discount = db_discount
                 if tax:
                     db_tax = Tax(item=new_item, percent=tax)
-                    db_tax.save()
+                    taxes.append(db_tax)
                     new_item.tax = db_tax
 
             Item.objects.bulk_create(items)
+            Discount.objects.bulk_create(discounts)
+            Tax.objects.bulk_create(taxes)
             self.stdout.write(self.style.SUCCESS('Successfully filled database'))
         except CommandError:
             django_command_name = os.path.basename(__file__).replace('.py','')

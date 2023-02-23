@@ -2,7 +2,11 @@ import os
 
 from django.core.management.base import BaseCommand, CommandError
 
-from products.models import Item, Tax, Discount
+from products.models import (
+    Item, 
+    # Tax, 
+    # Discount,
+)
 
 items_fixture = [
     {

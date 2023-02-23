@@ -17,7 +17,6 @@ from products.models import (
     Cart, 
     CartItem, 
     Order,
-    # Discount,
 )
 
 
@@ -91,23 +90,9 @@ class CartView(TemplateView):
         current_user_cart = Cart.objects.get(user=current_user)
 
         context = super(CartView, self).get_context_data(*args, **kwargs)
-        print(context)
         items = CartItem.objects.filter(cart=current_user_cart)
         context['items'] = items
-
-        # discounts = {}
-        # for item in items:
-        #     try:
-        #         discount = Discount.objects.get(item=item.item.pk)
-        #         discounts[item.item.pk] = discount.percent
-        #     except Discount.DoesNotExist as err:
-        #         print(err)
-
-        # print(discounts)
-        # context['discounts'] = discounts
-
         context['summary'] = current_user_cart.summarize()
-        # print(context)
 
         return context
     

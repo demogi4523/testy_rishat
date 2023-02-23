@@ -2,7 +2,6 @@ from __future__ import annotations
 from typing import Iterable, List
 
 from django.db import models
-# from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import User
 
 
@@ -13,20 +12,6 @@ class Item(models.Model):
     remained = models.PositiveSmallIntegerField(default=1)
     active = models.BooleanField(default=True)
 
-    # tax = models.OneToOneField(
-    #     'Tax', 
-    #     on_delete=models.CASCADE, 
-    #     related_name='item_tax', 
-    #     blank=True,
-    #     null=True, 
-    # )
-    # discount = models.OneToOneField(
-    #     'Discount', 
-    #     on_delete=models.CASCADE, 
-    #     related_name='item_discount', 
-    #     blank=True,
-    #     null=True, 
-    # )
 
     def serialize(self):
         return {
@@ -88,8 +73,6 @@ class Cart(models.Model):
         items = self.get_items()
         for item in items:
             val = item.item.price
-            # if item.item.discount:
-            #     val *= (1 - item.item.discount / 100)
             total += val * item.quantity
         return total
     
@@ -197,47 +180,5 @@ class Order(models.Model):
 
         for item in items:
             val = item.item.price
-            # if item.item.discount:
-            #     val *= (1 - item.item.discount / 100)
             total += val * item.quantity
         return total
-
-# class Discount(models.Model):
-#     item = models.OneToOneField(
-#         Item, 
-#         on_delete=models.CASCADE, 
-#         related_name='dicount_item',
-#         null=True,
-#     )
-#     percent = models.IntegerField(
-#         default=1,
-#         validators=[
-#             MaxValueValidator(99),
-#             MinValueValidator(1),
-#         ]
-#     )
-
-#     def __str__(self) -> str:
-#         return f"{self.item}'s with {self.percent} discount and {self.item.pk} id"
-
-
-# class Tax(models.Model):
-#     item = models.OneToOneField(
-#         Item, 
-#         on_delete=models.CASCADE,
-#         related_name='tax_item',
-#         null=True,
-#     )
-#     percent = models.IntegerField(
-#         default=10,
-#         validators=[
-#             MaxValueValidator(99),
-#             MinValueValidator(1),
-#         ]
-#     )
-
-#     class Meta:
-#         verbose_name_plural = 'Taxes'
-
-#     def __str__(self) -> str:
-#         return f"{self.item}'s with id {self.item.pk} tax"

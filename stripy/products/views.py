@@ -17,9 +17,7 @@ from dotenv import load_dotenv, find_dotenv
 from products.models import (
     Item, 
     Cart, 
-    Order, 
-    # Tax, 
-    # Discount,
+    Order,
 )
 
 
@@ -107,31 +105,8 @@ def create_cart_checkout_session(request: HttpRequest, pk: int):
         domain = request.scheme + '://' + request.get_host()
         data = []
         items = order.get_items()
-        # print(items)
-        # discounts = []
-
+ 
         for item in items:
-            # percent = Tax.objects.get(pk=item.item.pk).percent
-
-            # tax_rate = stripe.TaxRate.create( # Here
-            #     display_name=f'Sales Tax for item #{item.item.pk}',
-            #     percentage=percent,
-            #     inclusive=True 
-            # )
-
-            # discount_pk = item.item.pk
-            # try:
-            #     discount = Discount.objects.get(pk=discount_pk)
-            #     percent = discount.percent
-            #     COUPON_ID = stripe.Coupon.create(percent_off=percent, duration="once")
-
-            #     discount = {
-            #         'coupon': COUPON_ID,
-            #     }
-            #     discounts.append(discount)
-            # except Discount.DoesNotExist as err:
-            #     print(err)
-            
             data_el = {
                 'price_data': {
                     'unit_amount': item.item.price,
@@ -139,28 +114,18 @@ def create_cart_checkout_session(request: HttpRequest, pk: int):
                     'product_data': item.item.get_data()
                 },
                 'quantity': item.quantity,
-                # 'tax_rates': [tax_rate['id']] # Here
             }
 
             data.append(data_el)
 
-        # print(data)
-        # print()
-        # print(discounts)
-
         session = stripe.checkout.Session.create(
             line_items=data,
             mode='payment',
-            # discounts=discounts,
-            # automatic_tax={
-            #     'enabled': True,
-            # },
             customer_email = request.user.email,
             success_url=f'{domain}/success',
             cancel_url=f'{domain}/cancel',
         )
 
-        # print('Stripe session object')
         order.stripe_checkout_session_id = session.stripe_id
         order.save()
 

@@ -64,7 +64,7 @@ class Command(BaseCommand):
                     del item["discount"]
                 if "tax" in item:
                     tax = item["tax"]
-                    del item["discount"]
+                    del item["tax"]
 
                 new_item = Item(**item)
                 items.append(new_item)

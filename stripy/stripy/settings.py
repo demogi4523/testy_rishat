@@ -173,6 +173,14 @@ if not DEBUG:
         ),
     }
 
+    if RENDER_EXTERNAL_HOSTNAME:
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+            }
+        }   
+
     # Tell Django to copy statics to the `staticfiles` directory
     # in your application directory on Render.
     STATIC_ROOT = os.path.join(BASE_DIR, 'static')

@@ -20,6 +20,7 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = (
         'user', 
         'get_items',
+        'payed',
     )
     fieldsets = (
       ('Order info', {

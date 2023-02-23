@@ -39,6 +39,8 @@ window.onload = function() {
         })
           .then((response) => {
             console.log(response);
+            sending_form.children[1].value = 1;
+            alert('Added successfully!!!');
           });
       });
     }

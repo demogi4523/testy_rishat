@@ -4,13 +4,7 @@ from products.models import (
     Item, 
     Cart, CartItem, 
     Order, OrderItem,
-    # Discount,
-    # Tax,
 )
-
-
-# admin.site.register(Discount)
-# admin.site.register(Tax)
 
 @admin.register(OrderItem)
 class OrderAdmin(admin.ModelAdmin):
@@ -37,8 +31,6 @@ class OrderAdmin(admin.ModelAdmin):
     @admin.display(description='Order Items')
     def get_items(self, obj):
         orders = OrderItem.objects.filter(from_order=obj.pk)
-        print(obj)
-        print(orders)
         return ", ".join((f"{str(order.item)} x {order.quantity}" for order in orders))
 
 
@@ -47,8 +39,6 @@ class OrderAdmin(admin.ModelAdmin):
 class AdminItem(admin.ModelAdmin):
     list_display = (
         'name',
-        # 'discount',
-        # 'tax', 
         'remained',
     )
 

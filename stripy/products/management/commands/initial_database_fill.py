@@ -60,21 +60,22 @@ class Command(BaseCommand):
             taxes, discounts = [], []
             for item in items_fixture:
                 if "discount" in item:
-                    discount = item["discount"]  #= Discount(item=new_item, percent=item["discount"])
+                    discount = item["discount"]
                     del item["discount"]
                 if "tax" in item:
-                    tax = item["tax"]  #= Tax(item=new_item, percent=item["tax"])
+                    tax = item["tax"]
                     del item["discount"]
 
                 new_item = Item(**item)
                 items.append(new_item)
+
                 if discount:
-                    discounts.append((item, discount))
+                    discounts.append((new_item, discount))
                 else:
                     discounts.append(())
                 
                 if tax:
-                    taxes.append((item, tax))
+                    taxes.append((new_item, tax))
                 else:
                     taxes.append(())
 

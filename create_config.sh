@@ -9,4 +9,4 @@ echo "STRIPE_API_PUBLIC_KEY=pk_test_51MdIvZDSkcDnSDCwnrN0SguM7dTEmY42kOvZpbtZurt
 echo "STRIPE_API_SECRET_KEY=sk_test_51MdIvZDSkcDnSDCw1V0iG3jctm5Ch1OXExg918EIp80gU0k1Ac6LdiF0sYilTRXlbuZETjdZZi7oJEKneiW6LjYJ00u5a7S8ZH" >> .env
 echo "DEBUG=0" >> .env
 
-echo 'env fail was created'
+echo 'env file was created'

@@ -4,9 +4,7 @@ from django.core.management.base import BaseCommand, CommandError
 
 from products.models import (
     Item, 
-    # Tax, 
-    # Discount,
-)
+ )
 
 items_fixture = [
     {
@@ -15,7 +13,6 @@ items_fixture = [
         "price": "200000",
         "remained": 25,
         "active": True,
-        "tax": 13,
     },
     {
         "name": "Sweater",
@@ -23,8 +20,6 @@ items_fixture = [
         "price": "250000",
         "remained": 8,
         "active": True,
-        "tax": 13,
-        "discount": 20,
     },
     {
         "name": "Sneakers Nike",
@@ -32,7 +27,6 @@ items_fixture = [
         "price": "400000",
         "remained": 12,
         "active": True,
-        "tax": 16,
     },
     {
         "name": "T-Short",
@@ -40,8 +34,6 @@ items_fixture = [
         "price": "150000",
         "remained": 254,
         "active": True,
-        "tax": 20,
-        "discount": 20,
     },
     {
         "name": "Wristband",
@@ -49,8 +41,6 @@ items_fixture = [
         "price": "5000000",
         "remained": 3,
         "active": True,
-        "tax": 13,
-        "discount": 5,
     },
 ]
 
@@ -60,36 +50,11 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         try:
             items = []
-            tax, discount = None, None
-            taxes, discounts = [], []
             for item in items_fixture:
-                if "discount" in item:
-                    discount = item["discount"]
-                    del item["discount"]
-                if "tax" in item:
-                    tax = item["tax"]
-                    del item["tax"]
-
                 new_item = Item(**item)
                 items.append(new_item)
-
-                if discount:
-                    discounts.append((new_item, discount))
-                # else:
-                #     discounts.append(())
-                
-                if tax:
-                    taxes.append((new_item, tax))
-                # else:
-                #     taxes.append(())
-
             
             Item.objects.bulk_create(items)
-
-
-            # Discount.objects.bulk_create(discounts)
-            # Tax.objects.bulk_create(taxes)
-
             self.stdout.write(self.style.SUCCESS('Successfully filled database'))
         except CommandError:
             django_command_name = os.path.basename(__file__).replace('.py','')

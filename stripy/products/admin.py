@@ -4,13 +4,13 @@ from products.models import (
     Item, 
     Cart, CartItem, 
     Order, OrderItem,
-    Discount,
-    Tax,
+    # Discount,
+    # Tax,
 )
 
 
-admin.site.register(Discount)
-admin.site.register(Tax)
+# admin.site.register(Discount)
+# admin.site.register(Tax)
 
 @admin.register(OrderItem)
 class OrderAdmin(admin.ModelAdmin):

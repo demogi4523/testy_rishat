@@ -68,17 +68,22 @@ class Command(BaseCommand):
 
                 new_item = Item(**item)
                 if discount:
-                    db_discount = Discount(item=new_item, percent=discount)
-                    discounts.append(db_discount)
-                    new_item.discount = db_discount
+                    discounts.append((item, discount))
+                else:
+                    discounts.append(())
+                
                 if tax:
-                    db_tax = Tax(item=new_item, percent=tax)
-                    taxes.append(db_tax)
-                    new_item.tax = db_tax
+                    taxes.append((item, tax))
+                else:
+                    taxes.append(())
 
+            
             Item.objects.bulk_create(items)
+
+
             Discount.objects.bulk_create(discounts)
             Tax.objects.bulk_create(taxes)
+            
             self.stdout.write(self.style.SUCCESS('Successfully filled database'))
         except CommandError:
             django_command_name = os.path.basename(__file__).replace('.py','')

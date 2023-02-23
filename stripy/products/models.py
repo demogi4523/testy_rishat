@@ -13,20 +13,20 @@ class Item(models.Model):
     remained = models.PositiveSmallIntegerField(default=1)
     active = models.BooleanField(default=True)
 
-    tax = models.OneToOneField(
-        'Tax', 
-        on_delete=models.CASCADE, 
-        related_name='item_tax', 
-        blank=True,
-        null=True, 
-    )
-    discount = models.OneToOneField(
-        'Discount', 
-        on_delete=models.CASCADE, 
-        related_name='item_discount', 
-        blank=True,
-        null=True, 
-    )
+    # tax = models.OneToOneField(
+    #     'Tax', 
+    #     on_delete=models.CASCADE, 
+    #     related_name='item_tax', 
+    #     blank=True,
+    #     null=True, 
+    # )
+    # discount = models.OneToOneField(
+    #     'Discount', 
+    #     on_delete=models.CASCADE, 
+    #     related_name='item_discount', 
+    #     blank=True,
+    #     null=True, 
+    # )
 
     def serialize(self):
         return {

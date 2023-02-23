@@ -71,13 +71,13 @@ class Command(BaseCommand):
 
                 if discount:
                     discounts.append((new_item, discount))
-                else:
-                    discounts.append(())
+                # else:
+                #     discounts.append(())
                 
                 if tax:
                     taxes.append((new_item, tax))
-                else:
-                    taxes.append(())
+                # else:
+                #     taxes.append(())
 
             
             Item.objects.bulk_create(items)

@@ -13,10 +13,6 @@
 
 {% block content %}
     <ul>
-        {{ discounts }}
-        {{ summary }}
-        {{ orders }}
-        {{ items }}
     {% for order in orders %}
         {% comment %} <a href="{% url 'order' order.pk %}"> {% endcomment %}
             <li>
@@ -26,13 +22,6 @@
                     <li>Name: <a href="{% url 'item' item.item.pk %}">{{ item.item.name }}</a></li>
                     <li>Description: {{ item.item.description }}</li>
                     <li>Price: {{ item.item.price|divide:100 }} RUB</li>
-                    <p>{{ order.discounts }}</p>
-                    {% for pk, discount in order.discounts.items %}
-                        <p>{{ pk }}</p>
-                        {% if pk == item.item.pk %}
-                            <li>Discount: {{ discount }} RUB</li>
-                        {% endif %}
-                    {% endfor %}
                     <li>Quantity: {{ item.quantity }}</li>
                 {% endfor %}
                 </ul>

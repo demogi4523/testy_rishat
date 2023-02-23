@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import Iterable, List
 
 from django.db import models
-from django.core.validators import MaxValueValidator, MinValueValidator
+# from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import User
 
 
@@ -202,42 +202,42 @@ class Order(models.Model):
             total += val * item.quantity
         return total
 
-class Discount(models.Model):
-    item = models.OneToOneField(
-        Item, 
-        on_delete=models.CASCADE, 
-        related_name='dicount_item',
-        null=True,
-    )
-    percent = models.IntegerField(
-        default=1,
-        validators=[
-            MaxValueValidator(99),
-            MinValueValidator(1),
-        ]
-    )
+# class Discount(models.Model):
+#     item = models.OneToOneField(
+#         Item, 
+#         on_delete=models.CASCADE, 
+#         related_name='dicount_item',
+#         null=True,
+#     )
+#     percent = models.IntegerField(
+#         default=1,
+#         validators=[
+#             MaxValueValidator(99),
+#             MinValueValidator(1),
+#         ]
+#     )
 
-    def __str__(self) -> str:
-        return f"{self.item}'s with {self.percent} discount and {self.item.pk} id"
+#     def __str__(self) -> str:
+#         return f"{self.item}'s with {self.percent} discount and {self.item.pk} id"
 
 
-class Tax(models.Model):
-    item = models.OneToOneField(
-        Item, 
-        on_delete=models.CASCADE,
-        related_name='tax_item',
-        null=True,
-    )
-    percent = models.IntegerField(
-        default=10,
-        validators=[
-            MaxValueValidator(99),
-            MinValueValidator(1),
-        ]
-    )
+# class Tax(models.Model):
+#     item = models.OneToOneField(
+#         Item, 
+#         on_delete=models.CASCADE,
+#         related_name='tax_item',
+#         null=True,
+#     )
+#     percent = models.IntegerField(
+#         default=10,
+#         validators=[
+#             MaxValueValidator(99),
+#             MinValueValidator(1),
+#         ]
+#     )
 
-    class Meta:
-        verbose_name_plural = 'Taxes'
+#     class Meta:
+#         verbose_name_plural = 'Taxes'
 
-    def __str__(self) -> str:
-        return f"{self.item}'s with id {self.item.pk} tax"
+#     def __str__(self) -> str:
+#         return f"{self.item}'s with id {self.item.pk} tax"

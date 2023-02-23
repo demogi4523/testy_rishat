@@ -71,6 +71,11 @@ class Cart(models.Model):
         return f"{self.user}'s cart"
     
 
+    def add_item(self, item: Item, quantity: int):
+        cart_item = CartItem(item=item, cart=self, quantity=quantity)
+        cart_item.save()
+
+
     def get_custom_items(self):
         items = CartItem.objects.filter(cart=self.pk)
         return ", ".join((str(item) for item in items))
@@ -83,9 +88,9 @@ class Cart(models.Model):
         items = self.get_items()
         for item in items:
             val = item.item.price
-            if item.item.discount:
-                val *= (1 - item.item.discount / 100)
-            total += val
+            # if item.item.discount:
+            #     val *= (1 - item.item.discount / 100)
+            total += val * item.quantity
         return total
     
     def clear(self):
@@ -128,7 +133,7 @@ class Order(models.Model):
         null=True,
     )
     payed = models.BooleanField(default=False)
-
+    stripe_checkout_session_id = models.CharField(max_length=256, null=True, blank=True)
 
     def __str__(self) -> str:
         return f"From: {self.user} #{self.pk}"
@@ -192,9 +197,9 @@ class Order(models.Model):
 
         for item in items:
             val = item.item.price
-            if item.item.discount:
-                val *= (1 - item.item.discount / 100)
-            total += val
+            # if item.item.discount:
+            #     val *= (1 - item.item.discount / 100)
+            total += val * item.quantity
         return total
 
 class Discount(models.Model):

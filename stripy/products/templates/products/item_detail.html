@@ -8,6 +8,7 @@
       {% load static %}
       <script src="https://js.stripe.com/v3/"></script>
       <script src="{% static 'js/checkout.js' %}"></script>
+      {% load divide_tag %}
     {% endblock loading %}
 
     {% block content %}
@@ -15,7 +16,7 @@
       <div>
         <div>Name: {{ item.name }}</div>
         <div>Description: {{ item.description }}</div>
-        <div>Price: {{ item.price }}</div>
+        <div>Price: {{ item.price|divide:100 }} RUB</div>
       <div>
         
       <form method="GET" id="buyForm">

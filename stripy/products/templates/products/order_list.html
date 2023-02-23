@@ -8,25 +8,38 @@
     {% load static %}
       <script src="https://js.stripe.com/v3/"></script>
       <script src="{% static 'js/buy_checkout.js' %}"></script>
+      {% load divide_tag %}
 {% endblock loading %}
 
 {% block content %}
     <ul>
+        {{ discounts }}
+        {{ summary }}
+        {{ orders }}
+        {{ items }}
     {% for order in orders %}
         {% comment %} <a href="{% url 'order' order.pk %}"> {% endcomment %}
             <li>
                 <ul>
                 {% for item in order.get_items %}
+                    <li>PK: {{ item.item.pk }}</li>
                     <li>Name: <a href="{% url 'item' item.item.pk %}">{{ item.item.name }}</a></li>
                     <li>Description: {{ item.item.description }}</li>
-                    <li>Price: {{ item.item.price }}</li>
+                    <li>Price: {{ item.item.price|divide:100 }} RUB</li>
+                    <p>{{ order.discounts }}</p>
+                    {% for pk, discount in order.discounts.items %}
+                        <p>{{ pk }}</p>
+                        {% if pk == item.item.pk %}
+                            <li>Discount: {{ discount }} RUB</li>
+                        {% endif %}
+                    {% endfor %}
                     <li>Quantity: {{ item.quantity }}</li>
                 {% endfor %}
                 </ul>
                 {% if order.payed %}
                     <hr>
                     <p>Order payed!!!</p>
-                    <p>Summary: {{ order.summarize }}</p>
+                    <p>Summary: {{ order.summarize|divide:100 }} RUB</p>
                 {% else %}
                     <hr>
                     <p>Order not payed!!!</p>

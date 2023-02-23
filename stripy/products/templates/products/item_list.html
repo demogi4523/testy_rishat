@@ -1,15 +1,30 @@
 {% extends 'base.html' %}
 
+{% block title %}
+    All Items
+{% endblock title %}
+
+{% block loading %}
+    {% load static %}
+    <script src="{% static 'js/add_to_cart.js' %}"></script>
+    {% load divide_tag %}
+{% endblock loading %}
+
 {% block content %}
     <ul>
     {% for item in items %}
-        <a href="{% url 'item' item.pk %}">
-            <li>
+        <li>
+            <a href="{% url 'item' item.pk %}">
                 <div>Name: {{ item.name }}</div>
                 <div>Description: {{ item.description }}</div>
-                <div>Price: {{ item.price }}</div>
-            </li>
-        </a>
+                <div>Price: {{ item.price|divide:100 }} RUB</div>
+            </a>
+            <form class="addToCartForm" id="addToCartForm{{ item.pk }}">
+                {% csrf_token %}
+                <input type="number" min="1" value="1" />
+                <button type="submit">Add to cart</button>
+            </form>
+        </li>
     {% empty %}
     No items yet!
     {% endfor %}

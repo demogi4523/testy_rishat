@@ -44,15 +44,19 @@ window.onload = function() {
         headers: {'X-CSRFToken': csrftoken},
         mode: 'same-origin',
       })
-        .then((response) => {
-          console.log(response)
-          return response.json();
-        })
+        .then(response => response.json())
         .then((data) => {
-          console.log(data);
+          const stripeCheckoutSessionId = data.StripeCheckoutSessionId;
+          console.log(stripeCheckoutSessionId);
+          console.log("Stripe Checkout Session Id getting success");
+          console.log(stripe);
+          stripe.redirectToCheckout({
+            sessionId: stripeCheckoutSessionId,
+          });
         })
         .catch((err) => {
           console.error(err);
+          console.error("Stripe Checkout Session Id getting error");
         });
     });
   }

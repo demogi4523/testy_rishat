@@ -173,11 +173,12 @@ if not DEBUG:
     }
 
     if RENDER_EXTERNAL_HOSTNAME:
+        NEON_POSTGRES_DB = os.environ['NEON_POSTGRES_DB']
         DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': BASE_DIR / 'db.sqlite3',
-            }
+            'default': dj_database_url.config(
+                default=f'{NEON_POSTGRES_DB}',
+                conn_max_age=600,
+            ),
         }   
 
     # Tell Django to copy statics to the `staticfiles` directory

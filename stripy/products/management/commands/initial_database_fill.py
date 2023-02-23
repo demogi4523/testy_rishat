@@ -67,6 +67,7 @@ class Command(BaseCommand):
                     del item["discount"]
 
                 new_item = Item(**item)
+                items.append(new_item)
                 if discount:
                     discounts.append((item, discount))
                 else:
@@ -81,9 +82,9 @@ class Command(BaseCommand):
             Item.objects.bulk_create(items)
 
 
-            Discount.objects.bulk_create(discounts)
-            Tax.objects.bulk_create(taxes)
-            
+            # Discount.objects.bulk_create(discounts)
+            # Tax.objects.bulk_create(taxes)
+
             self.stdout.write(self.style.SUCCESS('Successfully filled database'))
         except CommandError:
             django_command_name = os.path.basename(__file__).replace('.py','')

@@ -2,7 +2,7 @@ import os
 
 from django.core.management.base import BaseCommand, CommandError
 
-from products.models import Item
+from products.models import Item, Tax, Discount
 
 items_fixture = [
     {
@@ -55,7 +55,26 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         try:
-            items = [Item(**item) for item in items_fixture]
+            items = []
+            tax, discount = None, None
+            for item in items_fixture:
+                if "discount" in item:
+                    discount = item["discount"]  #= Discount(item=new_item, percent=item["discount"])
+                    del item["discount"]
+                if "tax" in item:
+                    tax = item["tax"]  #= Tax(item=new_item, percent=item["tax"])
+                    del item["discount"]
+
+                new_item = Item(**item)
+                if discount:
+                    db_discount = Discount(item=new_item, percent=discount)
+                    db_discount.save()
+                    new_item.discount = db_discount
+                if tax:
+                    db_tax = Tax(item=new_item, percent=tax)
+                    db_tax.save()
+                    new_item.tax = db_tax
+
             Item.objects.bulk_create(items)
             self.stdout.write(self.style.SUCCESS('Successfully filled database'))
         except CommandError:

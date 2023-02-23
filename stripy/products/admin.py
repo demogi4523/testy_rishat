@@ -47,8 +47,8 @@ class OrderAdmin(admin.ModelAdmin):
 class AdminItem(admin.ModelAdmin):
     list_display = (
         'name',
-        'discount',
-        'tax', 
+        # 'discount',
+        # 'tax', 
         'remained',
     )
 

@@ -91,3 +91,4 @@ class Command(BaseCommand):
             self.stdout.write(self.style.ERROR(f"Something wring with {django_command_name} django command"))
         except Exception as err:
             self.stdout.write(self.style.ERROR(f"Something wrong\n{err}"))
+            raise err
